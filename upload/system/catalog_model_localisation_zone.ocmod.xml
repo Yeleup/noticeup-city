@@ -1,0 +1,32 @@
+<modification>
+    <name>CatalogModelLocalisationZone</name>
+    <version>1.0.0</version>
+    <link>...</link>
+    <author>magzhan9292</author>
+    <code>catalog_model_localisation_zone</code>
+
+    <file path="catalog/model/localisation/zone.php">
+        <operation error="skip">
+            <search><![CDATA[return $zone_data;]]></search>
+            <add position="replace"><![CDATA[
+                $data['zones'] = array();
+                    foreach ($zone_data as $zone) {
+                        $query = $this->db->table("noticeup_city")->where('zone_id', (int)$zone['zone_id'])->where('status', 1)->sortBy('sort_order');
+
+                        if ($query->get()) {
+                            $data['zones'][] = array(
+                                'zone_id' => $zone['zone_id'],
+                                'country_id' => $zone['country_id'],
+                                'name' => $zone['name'],
+                                'code' => $zone['code'],
+                                'status' => $zone['status'],
+                                'city' => $query->get(),
+                            );
+                        }
+                    }
+
+                return $data['zones'];
+            ]]></add>
+        </operation>
+    </file>
+</modification>
